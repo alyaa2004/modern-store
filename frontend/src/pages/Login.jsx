@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 
 import {
@@ -13,11 +14,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-;
+
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,21 +39,14 @@ export default function Login() {
         password,
       });
 
-     alert(response.data.message);
+      alert(response.data.message);
 
-// حفظ الـ Token
-localStorage.setItem("token", response.data.token);
+      // حفظ المستخدم والـ Token داخل AuthContext و localStorage
+      login(response.data.user, response.data.token);
 
-// حفظ بيانات المستخدم
-localStorage.setItem(
-  "user",
-  JSON.stringify(response.data.user)
-);
-
-// الانتقال للصفحة الرئيسية
-navigate("/");
+      // الانتقال للصفحة الرئيسية
+      navigate("/");
     } catch (err) {
-      // @ts-ignore
       alert(err.response?.data?.message || "Wrong email or password");
     } finally {
       setLoading(false);
