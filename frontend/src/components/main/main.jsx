@@ -80,7 +80,13 @@ const Main = () => {
 
   return (
     <>
-      <Container sx={{ py: 8 }}>
+     <Container
+  id="products"
+  sx={{
+    py: 8,
+    scrollMarginTop: "100px",
+  }}
+>
         <Box sx={{ mb: 5, textAlign: "center" }}>
           <Typography variant="h4" fontWeight="bold">
             Our Products
