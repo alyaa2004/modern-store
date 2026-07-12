@@ -1,38 +1,85 @@
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 const Footer = () => {
   return (
     <Box
       sx={{
         bgcolor: "#2B3445",
-        py: 1.3,
+        mt: 6,
+        py: 3,
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
       }}
     >
-      <Typography
-        justifyContent={"center"}
-        display={"flex"}
-        alignItems={"center"}
-        color={"HighlightText"}
-        variant="h6"
-        sx={{ fontSize: 18 }}
+      <Stack
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
       >
-        Designed and developed by
-        <Button
+        <Typography
           sx={{
-            mx: 0.5,
-            fontSize: "18px",
-            textTransform: "capitalize",
-            color: "#ff7790",
+            color: "#fff",
+            textAlign: "center",
+            fontSize: {
+              xs: 14,
+              sm: 16,
+            },
           }}
-          variant="text"
-          color="primary"
         >
-         Alyaa AL-Ali
-        </Button>
-        ©2025
-      </Typography>
+          Designed & Developed by{" "}
+          <Typography
+            component="span"
+            sx={{
+              color: "#ff7790",
+              fontWeight: "bold",
+            }}
+          >
+            Alyaa Al Ali
+          </Typography>
+        </Typography>
+
+        <Stack direction="row" spacing={1}>
+          <IconButton
+            component="a"
+            href="https://github.com/alyaa2004"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: "#fff" }}
+          >
+            <GitHubIcon />
+          </IconButton>
+
+          <IconButton
+            component="a"
+            href="https://www.linkedin.com/in/alyaa-al-ali-51b4192b2"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: "#0A66C2" }}
+          >
+            <LinkedInIcon />
+          </IconButton>
+        </Stack>
+
+        <Typography
+          sx={{
+            color: "#bbb",
+            fontSize: {
+              xs: 12,
+              sm: 14,
+            },
+          }}
+        >
+          © {new Date().getFullYear()} Modern Store. All rights reserved.
+        </Typography>
+      </Stack>
     </Box>
   );
 };

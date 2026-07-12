@@ -5,6 +5,8 @@ import {
   InputBase,
   Stack,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 import { styled } from "@mui/material/styles";
@@ -19,12 +21,12 @@ import { useNavigate } from "react-router-dom";
 import { useSearch } from "../../context/SearchContext";
 
 const Search = styled("div")(({ theme }) => ({
-  flexGrow: 0.5,
   position: "relative",
   borderRadius: 30,
   border: "1px solid #ccc",
   display: "flex",
   alignItems: "center",
+  width: "100%",
 
   "&:hover": {
     border: "1px solid #1976d2",
@@ -44,7 +46,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
 
   "& .MuiInputBase-input": {
-    padding: theme.spacing(1.5, 1.5, 1.5, 0),
+    padding: theme.spacing(1.5),
     paddingLeft: `calc(1em + ${theme.spacing(5)})`,
   },
 }));
@@ -60,7 +62,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 export default function Header2() {
   const navigate = useNavigate();
 
-  // Search Context
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const { search, setSearch } = useSearch();
 
   const cartItems = useSelector((state) => state.cart.items);
@@ -73,107 +77,111 @@ export default function Header2() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   return (
-    <Container
-      sx={{
-        my: 3,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 5,
-      }}
-    >
-      {/* Logo */}
-      <Stack
-        direction="row"
-        spacing={1}
-        alignItems="center"
-        sx={{ cursor: "pointer" }}
-        onClick={() => navigate("/")}
-      >
-        <ShoppingCartOutlined color="primary" />
-
-        <Typography
-          variant="h5"
-          fontWeight="bold"
-          color="primary"
+    <Container sx={{ my: 3 }}>
+      <Stack spacing={2}>
+        {/* الصف الأول */}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          Modern Store
-        </Typography>
-      </Stack>
-
-      {/* Search */}
-      <Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-
-        <StyledInputBase
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </Search>
-
-      {/* User */}
-      <Stack
-        direction="row"
-        spacing={3}
-        alignItems="center"
-      >
-        {user ? (
-          <>
-            <Typography
-              fontWeight="bold"
-              sx={{ cursor: "pointer" }}
-              onClick={() => navigate("/profile")}
-            >
-              Hi, {user.fullName}
-            </Typography>
-
-            <Typography
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  color: "#1976d2",
-                },
-              }}
-              onClick={() => navigate("/my-orders")}
-            >
-              My Orders
-            </Typography>
-
-            <Typography
-              color="error"
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  opacity: 0.8,
-                },
-              }}
-              onClick={() => {
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                navigate("/");
-                window.location.reload();
-              }}
-            >
-              Logout
-            </Typography>
-          </>
-        ) : (
-          <IconButton onClick={() => navigate("/login")}>
-            <Person2OutlinedIcon />
-          </IconButton>
-        )}
-
-        <IconButton onClick={() => navigate("/cart")}>
-          <StyledBadge
-            badgeContent={cartCount}
-            color="primary"
+          {/* Logo */}
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{ cursor: "pointer" }}
+            onClick={() => navigate("/")}
           >
-            <ShoppingCartIcon />
-          </StyledBadge>
-        </IconButton>
+            <ShoppingCartOutlined color="primary" />
+
+            <Typography
+              variant={isMobile ? "h6" : "h5"}
+              fontWeight="bold"
+              color="primary"
+            >
+              Modern Store
+            </Typography>
+          </Stack>
+
+          {/* User */}
+          <Stack direction="row" spacing={2} alignItems="center">
+            {user ? (
+              <>
+                {!isMobile && (
+                  <>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => navigate("/profile")}
+                    >
+                      Hi, {user.fullName}
+                    </Typography>
+
+                    <Typography
+                      sx={{
+                        cursor: "pointer",
+                        "&:hover": {
+                          color: "#1976d2",
+                        },
+                      }}
+                      onClick={() => navigate("/my-orders")}
+                    >
+                      My Orders
+                    </Typography>
+
+                    <Typography
+                      color="error"
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("user");
+                        navigate("/");
+                        window.location.reload();
+                      }}
+                    >
+                      Logout
+                    </Typography>
+                  </>
+                )}
+
+                {isMobile && (
+                  <IconButton onClick={() => navigate("/profile")}>
+                    <Person2OutlinedIcon />
+                  </IconButton>
+                )}
+              </>
+            ) : (
+              <IconButton onClick={() => navigate("/login")}>
+                <Person2OutlinedIcon />
+              </IconButton>
+            )}
+
+            <IconButton onClick={() => navigate("/cart")}>
+              <StyledBadge
+                badgeContent={cartCount}
+                color="primary"
+              >
+                <ShoppingCartIcon />
+              </StyledBadge>
+            </IconButton>
+          </Stack>
+        </Stack>
+
+        {/* البحث */}
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+
+          <StyledInputBase
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </Search>
       </Stack>
     </Container>
   );
